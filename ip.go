@@ -78,7 +78,7 @@ func IntranetIP() (ips []string, err error) {
 		}
 
 		// ignore docker and warden bridge
-		if strings.HasPrefix(iface.Name, "docker") || strings.HasPrefix(iface.Name, "w-") {
+		if strings.HasPrefix(iface.Name, "docker") || strings.HasPrefix(iface.Name, "w-") || strings.HasPrefix(iface.Name, "vm") {
 			continue
 		}
 
@@ -137,5 +137,5 @@ func IsIntranet(ipStr string) bool {
 		}
 	}
 
-	return false
+	return true
 }
