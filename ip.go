@@ -29,7 +29,7 @@ func IP() string {
 	}
 
 	if strings.HasPrefix(hostname, "ip-") {
-		httpResponse, err := DoGet("http: //api.tarzip.com/v1/ip")
+		httpResponse, err := DoGet("http://api.tarzip.com/v1/ip")
 		if nil != err {
 			log.Println("ERROR: Get ip from api.tarzip.com fail", err)
 		} else {
