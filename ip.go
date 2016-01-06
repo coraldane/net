@@ -43,7 +43,7 @@ func IP() string {
 
 	if "" == strIp {
 		if 0 < len(LocalIps) {
-			strIp = LocalIps[0]
+			strIp = LocalIps[len(LocalIps)-1]
 		}
 	}
 	return strIp
