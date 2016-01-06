@@ -45,6 +45,7 @@ func IP() string {
 		if 0 < len(LocalIps) {
 			strIp = LocalIps[len(LocalIps)-1]
 		}
+		log.Println(LocalIps)
 	}
 	return strIp
 }
