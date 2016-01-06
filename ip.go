@@ -1,10 +1,63 @@
 package net
 
 import (
+	"encoding/json"
+	"io/ioutil"
+	"log"
 	"net"
+	"net/http"
+	"os"
 	"strconv"
 	"strings"
 )
+
+type servletResponse struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
+func IP() string {
+	var strIp string
+	LocalIps, err := IntranetIP()
+	if err != nil {
+		log.Fatalln("get intranet ip fail:", err)
+	}
+
+	hostname, err := os.Hostname()
+	if err != nil {
+		log.Println("ERROR: os.Hostname() fail", err)
+	}
+
+	if strings.HasPrefix(hostname, "ip-") {
+		httpResponse, err := DoGet("http: //api.tarzip.com/v1/ip")
+		if nil != err {
+			log.Println("ERROR: Get ip from api.tarzip.com fail", err)
+		} else {
+			var resp servletResponse
+			err = json.Unmarshal(httpResponse, &resp)
+			if nil == err && true == resp.Success {
+				strIp = resp.Message
+			}
+		}
+	}
+
+	if "" == strIp {
+		if 0 < len(LocalIps) {
+			strIp = LocalIps[0]
+		}
+	}
+	return strIp
+}
+
+func DoGet(url string) ([]byte, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	return body, err
+}
 
 func IntranetIP() (ips []string, err error) {
 	ips = make([]string, 0)
